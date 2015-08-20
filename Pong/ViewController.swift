@@ -40,6 +40,11 @@ class ViewController: UIViewController {
         // Add gravity
         let gravityBehavior = UIGravityBehavior(items: [orangeBall])
         animator.addBehavior(gravityBehavior)
+        
+        // Add collision
+        let collisionBoundsBehavior = UICollisionBehavior(items: [orangeBall])
+        collisionBoundsBehavior.translatesReferenceBoundsIntoBoundary = true
+        animator.addBehavior(collisionBoundsBehavior)
     }
     
 }
