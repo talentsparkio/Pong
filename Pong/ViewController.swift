@@ -9,17 +9,38 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    let DIAMETER = CGFloat(50.0)
+    var orangeBall: UIView!
+    var animator: UIDynamicAnimator!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        orangeBall = UIView(frame: CGRectMake(0.0, 0.0, DIAMETER, DIAMETER))
+        orangeBall.center = CGPointMake(UIScreen.mainScreen().bounds.size.width/2, 100)
+        orangeBall.backgroundColor = UIColor.orangeColor()
+        orangeBall.layer.cornerRadius = 25.0;
+        view.addSubview(orangeBall)
     }
-
-
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.initBehaviors()
+    }
+    
+    func initBehaviors() {
+        animator = UIDynamicAnimator(referenceView: self.view)
+        
+        // Add gravity
+        let gravityBehavior = UIGravityBehavior(items: [orangeBall])
+        animator.addBehavior(gravityBehavior)
+    }
+    
 }
 
