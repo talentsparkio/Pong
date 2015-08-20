@@ -11,7 +11,11 @@ import UIKit
 class ViewController: UIViewController {
     
     let DIAMETER = CGFloat(50.0)
+    let PADDLE_WIDTH = CGFloat(100.0)
+    let PADDLE_HEIGHT = CGFloat(25.0)
+    
     var orangeBall: UIView!
+    var paddle: UIView!
     var animator: UIDynamicAnimator!
     
     override func viewDidLoad() {
@@ -26,6 +30,11 @@ class ViewController: UIViewController {
         orangeBall.backgroundColor = UIColor.orangeColor()
         orangeBall.layer.cornerRadius = 25.0;
         view.addSubview(orangeBall)
+        
+        paddle = UIView(frame:CGRectMake(0.0, 0.0, PADDLE_WIDTH, PADDLE_HEIGHT))
+        paddle.center = CGPointMake(UIScreen.mainScreen().bounds.size.width / 2, UIScreen.mainScreen().bounds.size.height - PADDLE_HEIGHT / 2)
+        paddle.backgroundColor = UIColor.grayColor()
+        view.addSubview(paddle)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -49,7 +58,7 @@ class ViewController: UIViewController {
         // Add elasticity
         let elasticityBehavior = UIDynamicItemBehavior(items: [orangeBall])
         elasticityBehavior.elasticity = 1.0
-        animator.addBehavior(elasticityBehavior)
+//        animator.addBehavior(elasticityBehavior)
     }
     
 }
