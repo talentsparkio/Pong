@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         orangeBall = UIView(frame: CGRectMake(0.0, 0.0, DIAMETER, DIAMETER))
-        orangeBall.center = CGPointMake(UIScreen.mainScreen().bounds.size.width/2, 100)
+        orangeBall.center = CGPointMake(UIScreen.mainScreen().bounds.size.width / 2, 100)
         orangeBall.backgroundColor = UIColor.orangeColor()
         orangeBall.layer.cornerRadius = 25.0;
         view.addSubview(orangeBall)
@@ -45,6 +45,11 @@ class ViewController: UIViewController {
         let collisionBoundsBehavior = UICollisionBehavior(items: [orangeBall])
         collisionBoundsBehavior.translatesReferenceBoundsIntoBoundary = true
         animator.addBehavior(collisionBoundsBehavior)
+        
+        // Add elasticity
+        let elasticityBehavior = UIDynamicItemBehavior(items: [orangeBall])
+        elasticityBehavior.elasticity = 1.0
+        animator.addBehavior(elasticityBehavior)
     }
     
 }
