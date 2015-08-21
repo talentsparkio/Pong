@@ -13,10 +13,15 @@ class ViewController: UIViewController {
     let DIAMETER = CGFloat(50.0)
     let PADDLE_WIDTH = CGFloat(100.0)
     let PADDLE_HEIGHT = CGFloat(25.0)
+    var BRICK_SIZE: CGSize {
+        let size = UIScreen.mainScreen().bounds.size.width / CGFloat(10)
+        return CGSize(width: size, height: size)
+    }
     
     var orangeBall: UIView!
     var paddle: UIView!
     var animator: UIDynamicAnimator!
+    var bricks = [UIView]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +40,16 @@ class ViewController: UIViewController {
         paddle.center = CGPointMake(UIScreen.mainScreen().bounds.size.width / 2, UIScreen.mainScreen().bounds.size.height - PADDLE_HEIGHT / 2)
         paddle.backgroundColor = UIColor.grayColor()
         view.addSubview(paddle)
+        
+        for var i = 0; i < 10; i++ {
+            var frame = CGRect(origin: CGPointZero, size: BRICK_SIZE )
+            frame.origin.y = 500
+            frame.origin.x = CGFloat(i) * BRICK_SIZE.width
+            let dropView = UIView(frame: frame)
+            dropView.backgroundColor = UIColor.random
+            bricks.append(dropView)
+            view.addSubview(dropView)
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -46,20 +61,56 @@ class ViewController: UIViewController {
     func initBehaviors() {
         animator = UIDynamicAnimator(referenceView: self.view)
         
-        // Add gravity
+        // Add gravity for ball
         let gravityBehavior = UIGravityBehavior(items: [orangeBall])
         animator.addBehavior(gravityBehavior)
         
         // Add collision
-        let collisionBoundsBehavior = UICollisionBehavior(items: [orangeBall])
+        let collisionBoundsBehavior = UICollisionBehavior(items: [orangeBall, paddle])
         collisionBoundsBehavior.translatesReferenceBoundsIntoBoundary = true
         animator.addBehavior(collisionBoundsBehavior)
         
-        // Add elasticity
+        // Add physical properties for ball
         let elasticityBehavior = UIDynamicItemBehavior(items: [orangeBall])
         elasticityBehavior.elasticity = 1.0
-//        animator.addBehavior(elasticityBehavior)
+        animator.addBehavior(elasticityBehavior)
+        
+        // Add physical properties for bricks
+        let brickBehavior = UIDynamicItemBehavior(items: bricks)
+        brickBehavior.allowsRotation = false
+        animator.addBehavior(brickBehavior)
+        
+        // Add physical properties for paddle
+        let paddleBehavior = UIDynamicItemBehavior(items: [paddle])
+        paddleBehavior.density = 100.0
+        animator.addBehavior(paddleBehavior)
+
+        // Add collision between ball and bricks
+        var ballAndBricks = [UIView]()
+        ballAndBricks.append(orangeBall)
+        for b in bricks {
+            ballAndBricks.append(b)
+        }
+        let collisionBallAndBricksBehavior = UICollisionBehavior(items: ballAndBricks)
+        animator.addBehavior(collisionBallAndBricksBehavior)
+        
+        // Add collision between ball and paddle
+        let collisionBallAndPaddleBehavior = UICollisionBehavior(items: [orangeBall, paddle])
+        animator.addBehavior(collisionBallAndPaddleBehavior)
     }
     
+}
+
+private extension UIColor {
+    class var random: UIColor {
+        switch arc4random()%5 {
+        case 0: return UIColor.greenColor()
+        case 1: return UIColor.blueColor()
+        case 2: return UIColor.orangeColor()
+        case 3: return UIColor.redColor()
+        case 4: return UIColor.purpleColor()
+        default: return UIColor.blackColor()
+        }
+    }
 }
 
