@@ -31,7 +31,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         super.viewWillAppear(animated)
         
         orangeBall = UIView(frame: CGRectMake(0.0, 0.0, DIAMETER, DIAMETER))
-        orangeBall.center = CGPointMake(UIScreen.mainScreen().bounds.size.width / 2, 100)
+        orangeBall.center = CGPointMake(UIScreen.mainScreen().bounds.size.width / 2, 300)
         orangeBall.backgroundColor = UIColor.orangeColor()
         orangeBall.layer.cornerRadius = 25.0;
         view.addSubview(orangeBall)
@@ -42,8 +42,8 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         view.addSubview(paddle)
         
         for var i = 0; i < 10; i++ {
-            var frame = CGRect(origin: CGPointZero, size: BRICK_SIZE )
-            frame.origin.y = 500
+            var frame = CGRect(origin: CGPointZero, size: BRICK_SIZE)
+            frame.origin.y = 200
             frame.origin.x = CGFloat(i) * BRICK_SIZE.width
             let dropView = UIView(frame: frame)
             dropView.backgroundColor = UIColor.random
@@ -71,8 +71,8 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         // Collision between ball and paddle
         if(item1 === orangeBall && item2 === paddle) {
             let pushBehavior = UIPushBehavior(items: [orangeBall], mode: .Instantaneous)
-            pushBehavior.angle = 0.0
-            pushBehavior.magnitude = 1.00
+            pushBehavior.pushDirection = CGVectorMake(0.0, -1.0)
+            pushBehavior.magnitude = 0.75
             animator.addBehavior(pushBehavior)
         }
     }
