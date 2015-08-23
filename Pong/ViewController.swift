@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UICollisionBehaviorDelegate {
     
     let DIAMETER = CGFloat(50.0)
     let PADDLE_WIDTH = CGFloat(100.0)
@@ -58,6 +58,25 @@ class ViewController: UIViewController {
         self.initBehaviors()
     }
     
+    @IBAction func movePaddle(sender: UIPanGestureRecognizer) {
+        let translationPoint = sender.locationInView(self.view)
+        
+        paddle.center = CGPointMake(translationPoint.x, paddle.center.y)
+        
+        animator.updateItemUsingCurrentState(paddle)
+    }
+    
+    func collisionBehavior(behavior: UICollisionBehavior, beganContactForItem item1: UIDynamicItem, withItem item2: UIDynamicItem, atPoint p: CGPoint) {
+        
+        // Collision between ball and paddle
+        if(item1 === orangeBall && item2 === paddle) {
+            let pushBehavior = UIPushBehavior(items: [orangeBall], mode: .Instantaneous)
+            pushBehavior.angle = 0.0
+            pushBehavior.magnitude = 1.00
+            animator.addBehavior(pushBehavior)
+        }
+    }
+    
     func initBehaviors() {
         animator = UIDynamicAnimator(referenceView: self.view)
         
@@ -83,19 +102,18 @@ class ViewController: UIViewController {
         // Add physical properties for paddle
         let paddleBehavior = UIDynamicItemBehavior(items: [paddle])
         paddleBehavior.density = 100.0
+        paddleBehavior.allowsRotation = false
         animator.addBehavior(paddleBehavior)
 
         // Add collision between ball and bricks
-        var ballAndBricks = [UIView]()
+        var ballAndBricks = bricks
         ballAndBricks.append(orangeBall)
-        for b in bricks {
-            ballAndBricks.append(b)
-        }
         let collisionBallAndBricksBehavior = UICollisionBehavior(items: ballAndBricks)
         animator.addBehavior(collisionBallAndBricksBehavior)
         
         // Add collision between ball and paddle
         let collisionBallAndPaddleBehavior = UICollisionBehavior(items: [orangeBall, paddle])
+        collisionBallAndPaddleBehavior.collisionDelegate = self
         animator.addBehavior(collisionBallAndPaddleBehavior)
     }
     
