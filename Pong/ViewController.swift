@@ -73,6 +73,14 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
             let pushBehavior = UIPushBehavior(items: [orangeBall], mode: .Instantaneous)
             pushBehavior.pushDirection = CGVectorMake(0.0, -1.0)
             pushBehavior.magnitude = 0.75
+            
+            // Need to remove the behavior without causing circular reference
+            unowned let _pushBehavior = pushBehavior
+            pushBehavior.action = { [unowned self] in
+                if(!_pushBehavior.active) {
+                    self.animator.removeBehavior(_pushBehavior)
+                }
+            }
             animator.addBehavior(pushBehavior)
         }
     }
