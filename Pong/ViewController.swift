@@ -13,8 +13,9 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     let DIAMETER = CGFloat(50.0)
     let PADDLE_WIDTH = CGFloat(100.0)
     let PADDLE_HEIGHT = CGFloat(25.0)
+    let NUM_BRICKS = 10
     var BRICK_SIZE: CGSize {
-        let size = UIScreen.mainScreen().bounds.size.width / CGFloat(10)
+        let size = UIScreen.mainScreen().bounds.size.width / CGFloat(NUM_BRICKS)
         return CGSize(width: size, height: size)
     }
     
@@ -41,7 +42,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         paddle.backgroundColor = UIColor.grayColor()
         view.addSubview(paddle)
         
-        for var i = 0; i < 10; i++ {
+        for var i = 0; i < NUM_BRICKS; i++ {
             var frame = CGRect(origin: CGPointZero, size: BRICK_SIZE)
             frame.origin.y = 200
             frame.origin.x = CGFloat(i) * BRICK_SIZE.width
