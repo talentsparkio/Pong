@@ -13,7 +13,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     let DIAMETER = CGFloat(50.0)
     let PADDLE_WIDTH = CGFloat(100.0)
     let PADDLE_HEIGHT = CGFloat(25.0)
-    let NUM_BRICKS = 10
+    let NUM_BRICKS = 20
     var BRICK_SIZE: CGSize {
         let size = UIScreen.mainScreen().bounds.size.width / CGFloat(NUM_BRICKS)
         return CGSize(width: size, height: size)
@@ -114,11 +114,12 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         paddleBehavior.allowsRotation = false
         animator.addBehavior(paddleBehavior)
 
-        // Add collision between ball and bricks
-        var ballAndBricks = bricks
-        ballAndBricks.append(orangeBall)
-        let collisionBallAndBricksBehavior = UICollisionBehavior(items: ballAndBricks)
-        animator.addBehavior(collisionBallAndBricksBehavior)
+        // Add collision between ball and bricks (individually so there is no avalanche effect)
+        for brick in bricks {
+            let ballAndBrick: [UIDynamicItem] = [brick, orangeBall]
+            let collisionBallAndBricksBehavior = UICollisionBehavior(items: ballAndBrick)
+            animator.addBehavior(collisionBallAndBricksBehavior)
+        }
         
         // Add collision between ball and paddle
         let collisionBallAndPaddleBehavior = UICollisionBehavior(items: [orangeBall, paddle])
