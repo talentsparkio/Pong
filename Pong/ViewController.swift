@@ -76,10 +76,9 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
             pushBehavior.magnitude = 0.75
             
             // Need to remove the behavior without causing circular reference
-            unowned let _pushBehavior = pushBehavior
-            pushBehavior.action = { [unowned self] in
-                if(!_pushBehavior.active) {
-                    self.animator.removeBehavior(_pushBehavior)
+            pushBehavior.action = { [unowned pushBehavior] in
+                if(!pushBehavior.active) {
+                    pushBehavior.dynamicAnimator?.removeBehavior(pushBehavior)
                 }
             }
             animator.addBehavior(pushBehavior)
